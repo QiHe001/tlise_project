@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qihe.tliseProject.mapper.EmpMapper">
+<!--    添加员工-->
+    <insert id="add">
+        INSERT INTO emp
+        ( username,password, name, gender, image, job,entrydate, dept_id, create_time, update_time) VALUES
+            (#{username}, #{password},#{name}, #{gender}, #{image}, #{job},#{entrydate}, #{deptId}, #{createTime}, #{updateTime});
+
+    </insert>
+<!--    修改员工信息-->
+    <update id="update">
+        update emp
+        <set>
+            <if test="name!=null">
+                name=#{name}
+            </if>
+            <if test="username!=null">
+                ,username=#{username}
+            </if>
+            <if test="gender!=null">
+                ,gender=#{gender}
+            </if>
+            <if test="image!=null">
+                ,image=#{image}
+            </if>
+            <if test="deptId!=null">
+                ,dept_id=#{deptId}
+            </if>
+            <if test="entrydate!=null">
+                ,entrydate=#{entrydate}
+            </if>
+            <if test="updateTime!=null">
+                ,update_time=#{updateTime}
+            </if>
+            <if test="job!=null">
+                ,job=#{job}
+            </if>
+        </set>
+        where id=#{id}
+
+    </update>
+    <!--    批量删除-->
+    <delete id="deleteIds">
+        delete from emp where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <!--分页查询
+        <select id="listEmp" resultType="com.qihe.tliseProject.pojo.Emp">
+            select  id,
+            username,
+            name,
+            password,
+            entrydate,
+            gender,
+            image,
+            job,
+            dept_id,
+            create_time,
+            update_time
+            from emp
+            <where>
+                <if test="name!=null">
+                    name like concat('%',#{name},'%')
+                </if>
+                <if test="gender!=null">
+                    and gender = #{gender}
+                </if>
+                <if test="begin!=null and end!=null">
+                    and entrydate between #{begin} and #{end}
+                </if>
+                <if test="begin!=null and end==null">
+                    and entrydate<![CDATA[ >= ]]>#{begin}
+                </if>
+                <if test="begin==null and end!=null">
+                    and entrydate <![CDATA[ < ]]> #{end}
+                </if>
+            </where>
+            limit #{start},#{pageSize};
+        </select>
+       查询总记录数
+        <select id="count" resultType="java.lang.Long">
+            select count(*) from emp;
+        </select>&ndash;&gt;-->
+<!--    运用pagehelper 正常查询即可-->
+    <select id="listEmp" resultType="com.qihe.tliseProject.pojo.Emp">
+        select  id,
+        username,
+        name,
+        password,
+        entrydate,
+        gender,
+        image,
+        job,
+        dept_id,
+        create_time,
+        update_time
+        from emp
+        <where>
+            <if test="name!=null and name!=''">
+                name like concat('%',#{name},'%')
+            </if>
+            <if test="gender!=null">
+                and gender = #{gender}
+            </if>
+            <if test="begin!=null and end!=null">
+                and entrydate between #{begin} and #{end}
+            </if>
+            <if test="begin!=null and end==null">
+                and entrydate<![CDATA[ >= ]]>#{begin}
+            </if>
+            <if test="begin==null and end!=null">
+                and entrydate <![CDATA[ < ]]> #{end}
+            </if>
+        </where>
+        order by update_time desc
+    </select>
+<!--&lt;!&ndash;    根据id回显&ndash;&gt;
+    <select id="selectById" resultType="com.qihe.tliseProject.pojo.Emp">
+
+    </select>-->
+</mapper>
